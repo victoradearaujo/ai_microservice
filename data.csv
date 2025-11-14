@@ -1,5 +1,0 @@
-data = [
-    {"lead_id": 1, "name": "John Smith", "last_contacted": "2025-10-25", "engagement_score": 60, "stage": "Proposal Sent"}, 
-    {"lead_id": 2, "name": "Emma Lee", "last_contacted": "2025-10-12", "engagement_score": 25, "stage": "New Lead"}, 
-    {"lead_id": 3, "name": "Mark Jones", "last_contacted": "2025-10-15", "engagement_score": 45, "stage": "Qualified"}
-    ]
