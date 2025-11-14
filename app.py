@@ -55,4 +55,4 @@ def get_smart_alerts():
     except Exception as e:
         return JSONResponse(status_code=500, content={"ERROR": "leads.csv file not found or invalid format."})
     
-    
+
