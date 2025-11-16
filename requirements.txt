@@ -1,0 +1,5 @@
+requirements.txt
+ollama==0.1.5 
+pandas==2.14.0
+fastapi==0.95.2
+uvicorn==0.22.0
