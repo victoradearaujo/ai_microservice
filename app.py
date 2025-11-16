@@ -38,9 +38,8 @@ def generate_ai_alert(lead_name: str, engagement_score: int, days_since_last_con
     Provide a concise alert message.
     """
     )
-    
 
-    response = client.chat(model="llama2", messages=[{"role": "user", "content": prompt}])
+    response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
     return response["message"]["content"]
 
 
@@ -52,12 +51,10 @@ def root():
 # Endpoint to get smart alerts data
 @app.get("/api/smart-alerts")
 def get_smart_alerts():
-    try:
+  
         df = pd.read_csv("leads.csv")
         
         enriched = [] # List to hold enriched lead data
-        
-        client = ollama.Chat()
 
         for _,row in df.iterrows():
              days = compute_days_since(str(row["last_contacted"]))
@@ -82,8 +79,3 @@ def get_smart_alerts():
             })
              
         return enriched
-    
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"ERROR": "leads.csv file not found or invalid format."})
-    
-
