@@ -6,7 +6,7 @@ import ollama
 import os 
 import logging 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional, List 
 
 
