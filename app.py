@@ -6,6 +6,9 @@ import ollama
 import os 
 import logging 
 from fastapi import HTTPException
+from pydantic import BaseModel, Field
+from typing import Optional, List 
+
 
 # Infos about the API
 app = FastAPI(
@@ -15,6 +18,20 @@ app = FastAPI(
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+# Response model (pydantic)
+class LeadAlert(BaseModel):
+    lead_name: str
+    last_contacted: str
+    engagement_score: int
+    stage: str
+    days_since_last_contacted: int
+    priority: str
+    ai_alert: str
+    error: Optional[str] = None
+#Response Model List 
+class SmartAlertsResponse(BaseModel):
+    alerts: List[LeadAlert]
 
 # Validate CSV File (exists file, read, pandasDF, HTTPEexception)
 def load_leads_csv(filename: str = "leads.csv"):
@@ -91,22 +108,22 @@ def root():
     return {"message": "JJungles Smart Alerts API is running"}
 
 # Endpoint to get smart alerts data
-@app.get("/api/smart-alerts")
-def get_smart_alerts():
+@app.get("/api/smart-alerts", response_model=SmartAlertsResponse)
+async def get_smart_alerts():
         # Log the request
         logging.info("Received request for smart alerts")
 
         # Load the leads CSV file
         try:
             df = load_leads_csv()
-        except HTTPException as e:
-            return JSONResponse(status_code=e.status_code, content={"error": e.detail})
-            logging.info(f"Loaded {len(df)} leads from CSV file")
-            
+        except Exception as e:
+            logging.error(f"Error loading leads CSV file: {e}")
+            raise HTTPException(status_code=500, detail="Error loading leads CSV file")
+        logging.info(f"Loaded {len(df)} leads from CSV file")
+
         enriched = [] # List to hold enriched lead data
          
-        # Process each lead 
-        for idx,row in df.iterrows():
+        for idx, row in df.iterrows():
             try:
                 lead_name = row.get("lead_name", "Unknown")
                 logging.info(f"Processing lead: {lead_name}")
@@ -115,30 +132,37 @@ def get_smart_alerts():
                 days = compute_days_since(str(row["last_contacted"]))
                 engagement = int(row["engagement_score"])
                 priority = compute_priority(engagement, days)
-            
-                 # Generate AI alert
+
+                # Generate AI alert
                 ai_text = generate_ai_alert(
-                 lead_name=row["lead_name"],
-                 days_since_last_contacted=days,
-                 engagement_score=engagement,
-                 stage=row["stage"]
+                    lead_name=row["lead_name"],
+                    days_since_last_contacted=days,
+                    engagement_score=engagement,
+                    stage=row["stage"]
                 )
-            
+
                 enriched.append({
-                 "lead_name": row["lead_name"],
-                 "last_contacted": row["last_contacted"],
-                 "engagement_score": row["engagement_score"],
-                 "stage": row["stage"],
-                 "days_since_last_contacted": days,
+                "lead_name": row["lead_name"],
+                "last_contacted": row["last_contacted"],
+                "engagement_score": row["engagement_score"],
+                "stage": row["stage"],
+                "days_since_last_contacted": days,
                 "priority": priority,
                 "ai_alert": ai_text
-                })
+            })
+
             except Exception as e:
                 logging.exception(f"Error processing lead at row {idx}: {e}")
                 enriched.append({
-                    "lead_name": row.get("lead_name", f"ROw {idx})"),
-                    "error": f"Could no process this lead: {str(e)}"               
-                })
-        logging.info("Completed processing all leads")
-        return enriched
+                     "lead_name": row.get("lead_name", f"Row {idx}"),
+                    "last_contacted": "",
+                    "engagement_score": 0,
+                    "stage": "",
+                    "days_since_last_contacted": 0,
+                    "priority": "Unknown",
+                    "ai_alert": "",
+                     "error": f"Could not process lead: {str(e)}"
+         })
 
+        logging.info("Completed processing all leads")
+        return SmartAlertsResponse(alerts=enriched)
