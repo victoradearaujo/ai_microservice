@@ -1,39 +1,140 @@
-# 📘 JJungles Smart Alerts — README
+# Smart Alerts AI – JJungles CRM Microservice
+<p align="center">
+  <img src="jjungles.png" alt="jjungles" width="600"/>
+</p>
 
-## 📌 Project Description
-JJungles Smart Alerts is a Python microservice built with **FastAPI** to generate intelligent alerts for sales leads.  
-The service reads a `leads.csv` file, enriches each lead with computed fields (such as days since last contact and priority), and will soon include AI-generated alert messages using **Ollama** (local LLM).
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-teal.svg)]()
+[![Ollama](https://img.shields.io/badge/Ollama-LLM-orange.svg)]()
 
----
+## Project Description
 
-# ✅ 1. What Has Been Completed
+Smart Alerts AI – JJungles CRM Microservice is an intelligent alerts engine designed to enhance CRM workflows by analyzing lead data and generating real-time AI-driven insights.
 
-### ✔️ Environment Setup
-- FastAPI installed and running locally  
-- `/` root endpoint working (health check)  
-- `/api/smart-alerts` endpoint returning enriched lead data  
-- CSV successfully read and parsed  
+This microservice:
 
-### ✔️ Business Logic Implemented
-- `compute_days_since()` to calculate time since the last interaction  
-- `compute_priority()` to classify leads (High/Medium/Low)  
-- Iteration through CSV using pandas  
-- Enrichment of each lead with:
-  - lead name  
-  - last contacted date  
-  - engagement score  
-  - pipeline stage  
-  - days since contact  
-  - priority level  
+- Reads and validates a leads CSV file
+- Calculates lead metrics and prioritization
+- Uses Ollama + Llama 3.2 (3B) to generate personalized alert messages
+- Returns enriched CRM insights via a clean FastAPI REST API
 
-### ✔️ API now reliably returns all leads (not only one)
+It was built to help sales teams identify high-priority leads, automate follow-ups, and improve customer engagement.
 
----
+## Prerequisites
 
-# 🔧 2. Current Project Structure
+### Install Python 3.10+
+```bash
+python3 --version
+```
 
-project/
-│── app.py
-│── leads.csv
-│── requirements.txt (optional)
+### Install Ollama
+macOS / Linux:
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Windows:
+Download from Ollama website.
+
+### Pull the required model
+```bash
+ollama pull llama3.2:3b
+```
+
+## Architecture Overview
+
+(Architecture diagram omitted for brevity – included in previous message)
+
+## Technologies Used
+
+- Python 3.10+
+- FastAPI
+- Ollama
+- Llama 3.2 – 3B
+- Pandas
+- Pydantic
+- Standard Logging
+
+## Installation & Usage
+
+### Clone the repository
+```bash
+git clone https://github.com/victoradearaujo/ai_microservice.git
+cd smart-alerts-ai
+```
+
+### Create virtual environment
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Run the API
+```bash
+uvicorn app:app --reload
+```
+
+## Project Structure
+```
+smart-alerts-ai/
+│
+├── app.py
+├── leads.csv
+├── requirements.txt
 └── README.md
+```
+
+## API Endpoints & Examples
+
+### Health Check
+```json
+{ "message": "JJungles Smart Alerts API is running" }
+```
+
+### Smart Alerts Example Response
+```json
+{
+  "alerts": [
+    {
+      "lead_name": "John Doe",
+      "last_contacted": "2024-01-10",
+      "engagement_score": 42,
+      "stage": "Negotiation",
+      "days_since_last_contacted": 12,
+      "priority": "Medium Priority",
+      "ai_alert": "AI-generated message..."
+    }
+  ]
+}
+```
+<p align="center">
+  <img src="fastapi_docs.png" alt="jjungles" width="600"/>
+</p>
+
+<p align="center">
+  <img src="smart_alerts.png" alt="jjungles" width="600"/>
+</p>
+
+## Environment Variables
+```
+MODEL_NAME=llama3.2:3b
+CSV_FILE=leads.csv
+LOG_LEVEL=INFO
+```
+## License
+MIT License
+
+## Contributing
+1. Fork this repository
+2. Create a feature branch
+3. Commit changes
+4. Open PR
+
+## Gitflow
+main → production  
+develop → active development  
