@@ -43,7 +43,9 @@ ollama pull llama3.2:3b
 
 ## Architecture Overview
 
-(Architecture diagram omitted for brevity – included in previous message)
+<p align="center">
+  <img src="architecture_overview.png" alt="architecture_overview" width="600"/>
+</p>
 
 ## Technologies Used
 
@@ -117,11 +119,11 @@ smart-alerts-ai/
 }
 ```
 <p align="center">
-  <img src="fastapi_docs.png" alt="jjungles" width="600"/>
+  <img src="fastapi_docs.png" alt="fastapi_docs" width="600"/>
 </p>
 
 <p align="center">
-  <img src="smart_alerts.png" alt="jjungles" width="600"/>
+  <img src="smart_alerts.png" alt="smart_alerts" width="600"/>
 </p>
 
 ## Environment Variables
