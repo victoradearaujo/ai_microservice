@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:14
+    container_name: db-odoo16
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123@ 
+    ports:
+      - "5432:5432"
+    volumes:
+      - odoo16-db-data:/var/lib/postgresql/data
+    networks:
+      - private_network
+
+  odoo:
+    image: odoo:16
+    container_name: odoo16
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons
+    environment:
+      - HOST=db
+      - USER=admin
+      - PASSWORD=admin123@
+    networks:
+      - odoo-net
+      - private_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-odoo16
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123@
+    networks:
+      - private_network
+
+networks:
+  odoo-net:
+    driver: bridge
+  private_network:
+    driver: bridge
+
+volumes:
+  odoo16-db-data:
+  pgadmin-data:
