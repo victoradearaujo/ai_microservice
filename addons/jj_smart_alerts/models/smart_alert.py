@@ -25,20 +25,30 @@ class JJSmartAlert(models.Model):
 
     @api.model
     def fetch_from_api(self):
-        # Alerts from the FastAPI endpoint and create/update records
-
         url = "http://host.docker.internal:8000/api/smart-alerts"
 
         try:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
-            alerts = response.json()
+
+            data = response.json()
+
+            # Extract the list inside "alerts"
+            alerts = data.get("alerts", [])
 
             for alert in alerts:
 
-                lead_name = alert.get('lead')
-                alert_message = alert.get('alert')
-                priority = alert.get('priority', 'low')
+                lead_name = alert.get("lead_name")
+                alert_message = alert.get("ai_alert")
+                priority_raw = alert.get("priority", "Low Priority")
+
+                # Normalize priority to: low / medium / high
+                priority = "low"
+                if "medium" in priority_raw.lower():
+                    priority = "medium"
+                elif "high" in priority_raw.lower():
+                    priority = "high"
+
                 timestamp = datetime.now()
 
                 # Prevent duplicates
@@ -51,11 +61,11 @@ class JJSmartAlert(models.Model):
                     _logger.info(f"Alert already exists for lead: {lead_name}")
                     continue
 
-                # Create new alert
+                # Create record
                 self.create({
                     'name': lead_name,
                     'alert_message': alert_message,
-                    'priority': priority.lower(),
+                    'priority': priority,
                     'timestamp': timestamp,
                 })
 
