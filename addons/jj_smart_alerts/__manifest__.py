@@ -8,7 +8,9 @@
     "category": "Tools",
     "depends": ["base"],
     "data": [
-        "views/jj_smart_alerts_views.xml",
+        "views/smart_alerts_views.xml",
+        "data/cron_job.xml",
+        "security/ir.model.access.csv"
     ],
     "installable": True,
     "application": True
