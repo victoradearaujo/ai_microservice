@@ -1,73 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ============================= -->
-    <!--        TREE VIEW              -->
-    <!-- ============================= -->
     <record id="view_jj_smart_alert_tree" model="ir.ui.view">
         <field name="name">jj.smart.alert.tree</field>
         <field name="model">jj.smart.alert</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name" string="Lead"/>
-                <field name="alert_message" string="Alert"/>
-                <field name="priority" string="Priority"/>
-                <field name="timestamp" string="Generated At"/>
+                <field name="name"/>
+                <field name="alert_message"/>
+                <field name="priority"/>
+                <field name="timestamp"/>
             </tree>
         </field>
     </record>
 
-    <!-- ============================= -->
-    <!--         FORM VIEW             -->
-    <!-- ============================= -->
     <record id="view_jj_smart_alert_form" model="ir.ui.view">
         <field name="name">jj.smart.alert.form</field>
         <field name="model">jj.smart.alert</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="state" widget="statusbar" statusbar_visible="new,high,medium,low,done"/>
-                </header>
-
                 <sheet>
                     <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="priority"/>
-                            <field name="timestamp"/>
-                        </group>
-                        <group>
-                            <field name="alert_message" colspan="2"/>
-                        </group>
+                        <field name="name"/>
+                        <field name="alert_message"/>
+                        <field name="priority"/>
+                        <field name="state"/>
+                        <field name="timestamp"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- ============================= -->
-    <!--          ACTION               -->
-    <!-- ============================= -->
     <record id="action_jj_smart_alerts" model="ir.actions.act_window">
         <field name="name">Smart Alerts</field>
         <field name="res_model">jj.smart.alert</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- ============================= -->
-    <!--           MENUS               -->
-    <!-- ============================= -->
-    <menuitem
-        id="menu_jj_smart_alert_root"
-        name="Smart Alerts"
-        sequence="10"
-        create="0"
-        icon="fa-bell"
-    />
-
-    <menuitem
-        id="menu_jj_smart_alerts"
-        parent="menu_jj_smart_alert_root"
-        name="Alerts"
-        action="action_jj_smart_alerts"
-    />
+    <menuitem id="menu_jj_smart_alert_root" name="Smart Alerts" sequence="10"/>
+    <menuitem id="menu_jj_smart_alerts" parent="menu_jj_smart_alert_root" name="Alerts" action="action_jj_smart_alerts"/>
 </odoo>
