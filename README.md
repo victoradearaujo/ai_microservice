@@ -158,7 +158,7 @@ This section covers the integration of the **Smart Alerts AI Microservice** with
 
 
 - `security/ir.model.access.csv` → actions control access
-  `models/smart_alert.py` → defines the `jj.smart.alert` model and the `fetch_from_api` method.  
+- `models/smart_alert.py` → defines the `jj.smart.alert` model and the `fetch_from_api` method.  
 - `views/smart_alerts_views.xml` → contains the **tree and form views** and menu entries.  
 - `data/cron_job.xml` → defines the **scheduled action** to automatically fetch alerts.  
 
