@@ -5,7 +5,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
 class JJSmartAlert(models.Model):
     _name = "jj.smart.alert"
     _description = "Smart Alerts from FastAPI"
@@ -32,12 +31,9 @@ class JJSmartAlert(models.Model):
             response.raise_for_status()
 
             data = response.json()
-
-            # Extract the list inside "alerts"
             alerts = data.get("alerts", [])
 
             for alert in alerts:
-
                 lead_name = alert.get("lead_name")
                 alert_message = alert.get("ai_alert")
                 priority_raw = alert.get("priority", "Low Priority")
@@ -51,23 +47,25 @@ class JJSmartAlert(models.Model):
 
                 timestamp = datetime.now()
 
-                # Prevent duplicates
-                existing = self.search([
-                    ('name', '=', lead_name),
-                    ('alert_message', '=', alert_message),
-                ], limit=1)
+                # Check if an alert for this lead already exists
+                existing = self.search([('name', '=', lead_name)], limit=1)
 
                 if existing:
-                    _logger.info(f"Alert already exists for lead: {lead_name}")
-                    continue
-
-                # Create record
-                self.create({
-                    'name': lead_name,
-                    'alert_message': alert_message,
-                    'priority': priority,
-                    'timestamp': timestamp,
-                })
+                    _logger.info(f"Updating existing alert for lead: {lead_name}")
+                    # Update the existing alert
+                    existing.write({
+                        'alert_message': alert_message,
+                        'priority': priority,
+                        'timestamp': timestamp,
+                    })
+                else:
+                    # Create new alert if lead doesn't exist
+                    self.create({
+                        'name': lead_name,
+                        'alert_message': alert_message,
+                        'priority': priority,
+                        'timestamp': timestamp,
+                    })
 
             return True
 
