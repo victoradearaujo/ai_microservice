@@ -5,6 +5,17 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+def clean_alert_message(message: str) -> str:
+    if not message:
+        return ""
+    msg = " ".join(message.splitlines())  # remove line breaks
+    msg = msg.replace("Here's a concise alert message:", "")  # remove meta phrases
+    msg = msg.replace("Here is a concise alert message:", "")
+    msg = msg.replace("Here's a smart short alert message:", "")
+    msg = msg.replace("Here is a smart short alert message:", "")
+    msg = msg.strip()  # remove leading/trailing spaces
+    return msg[:250]  # optional: limit to 250 characters
+
 class JJSmartAlert(models.Model):
     _name = "jj.smart.alert"
     _description = "Smart Alerts from FastAPI"
@@ -29,22 +40,26 @@ class JJSmartAlert(models.Model):
         try:
             response = requests.get(url, timeout=60)
             response.raise_for_status()
-
+            
             data = response.json()
             alerts = data.get("alerts", [])
 
+            # Mapping for priority normalization
+            priority_map = {
+                'low': 'low',
+                'low priority': 'low',
+                'medium': 'medium',
+                'medium priority': 'medium',
+                'high': 'high',
+                'high priority': 'high',
+            }
+
             for alert in alerts:
                 lead_name = alert.get("lead_name")
-                alert_message = alert.get("ai_alert")
-                priority_raw = alert.get("priority", "Low Priority")
-
-                # Normalize priority to: low / medium / high
-                priority = "low"
-                if "medium" in priority_raw.lower():
-                    priority = "medium"
-                elif "high" in priority_raw.lower():
-                    priority = "high"
-
+                raw_message = alert.get("ai_alert", "")
+                alert_message = clean_alert_message(raw_message)
+                priority_raw = alert.get("priority", "Low Priority").strip().lower()
+                priority = priority_map.get(priority_raw, 'low')
                 timestamp = datetime.now()
 
                 # Check if an alert for this lead already exists
@@ -58,7 +73,8 @@ class JJSmartAlert(models.Model):
                         'priority': priority,
                         'timestamp': timestamp,
                     })
-                else:
+                    continue
+            
                     # Create new alert if lead doesn't exist
                     self.create({
                         'name': lead_name,
