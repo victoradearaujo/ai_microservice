@@ -83,13 +83,13 @@ def compute_priority(engagement_score: int, delta_days: int) -> str:
 def generate_ai_alert(lead_name: str, engagement_score: int, days_since_last_contacted: int, stage: str) -> str:
 
     prompt = (f"""
-    You are a sales assistant. Based on the following lead information, generate a smart short alert message(1-2 sentences):
+    You are an assistant generating sales alerts. Based on the following lead information, generate a single concise sentence, suitable for a dashboard alert. Do not include explaations or suggestions messages.:
     Lead Name: {lead_name}
     Engagement Score: {engagement_score}
     Days Since Last Contacted: {days_since_last_contacted}
     Stage: {stage}
     
-    Provide a concise alert message.
+    Provide only a concise alert message.
     """
     )
 
