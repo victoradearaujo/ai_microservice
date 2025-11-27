@@ -3,9 +3,14 @@
   <img src="jjungles.png" alt="jjungles" width="600"/>
 </p>
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
-[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-teal.svg)]()
-[![Ollama](https://img.shields.io/badge/Ollama-LLM-orange.svg)]()
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-teal.svg?logo=fastapi&logoColor=white)]()
+[![Ollama](https://img.shields.io/badge/Ollama-LLM-orange.svg?logo=ollama&logoColor=white)]()
+[![Odoo 16](https://img.shields.io/badge/Odoo-16-A3478B.svg?logo=odoo&logoColor=white)]()
+[![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-336791.svg?logo=postgresql&logoColor=white)]()
+[![pgAdmin4](https://img.shields.io/badge/pgAdmin-4-2F9FD7.svg?logo=postgresql&logoColor=white)]()
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED.svg?logo=docker&logoColor=white)]()
+
 
 ## Project Description
 
