@@ -83,16 +83,20 @@ def compute_priority(engagement_score: int, delta_days: int) -> str:
 def generate_ai_alert(lead_name: str, engagement_score: int, days_since_last_contacted: int, stage: str) -> str:
 
     prompt = (f"""
-    You are an assistant generating sales alerts. Based on the following lead information, generate a single concise sentence, suitable for a dashboard alert. Do not include explaations or suggestions messages.:
+    You are an assistant generating sales alerts. Based on the following lead information, generate a single concise sentence, suitable for a dashboard alert. 
+    Completely direct and actionable.
+    Do not include explanations or suggestions messages.
+    Do not use conversational language, no greetings, no explanations.          
+    Do not use suggestion words or phrases like "you should", "consider", "maybe","you could", "try to", "it might be good", "possibly", "recommend", "suggest".
     Lead Name: {lead_name}
     Engagement Score: {engagement_score}
     Days Since Last Contacted: {days_since_last_contacted}
     Stage: {stage}
     
-    Provide only a concise alert message.
+    Provide only a one concise alert message sentence under 120 characters, whithout meta pharases or extra commentary
     """
     )
-
+    MAX_LEN = 120
     response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
     return response["message"]["content"]
 
